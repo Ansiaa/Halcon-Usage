@@ -2,7 +2,7 @@
 ##Creation (gen_rectangle1)
 
 1. [gen_rectangle1.hdev](#gen_rectangle1)
-2. [adapt_pattern.hdev](#adapt_pattern.hdev)
+2. [adapt_pattern.hdev](#adapt_pattern)
 3. 
 ---
 
@@ -65,7 +65,7 @@ dev_display (Rectangles)
 
 <a name="adapt_pattern.hdev " />
 
-# adapt_pattern.hdev 
+# adapt_pattern
 
 이미지에서 패턴을 찾고, 상황에 따라 이미지를 업데이트하는 적응형 패턴 매칭 
 
