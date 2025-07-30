@@ -59,9 +59,123 @@ dilation_circle(Region, RegionDilation, Radius)
 | `RegionDilation` | 출력: 팽창된 Region          |
 | `Radius`         | 팽창에 사용되는 원의 반지름 (픽셀 단위) |
 
+---
 
+```python
+closing_circle (Regions, RegionClosing, Radius)
+```
+형태학적 클로징(morphological closing)**을 수행
+이미지나 바이너리 영역의 작은 구멍을 메우고, 끊긴 경계를 연결하는 데 매우 유용
+
+| 파라미터            | 설명                   |
+| --------------- | -------------------- |
+| `Regions`       | 입력 바이너리 영역 (HObject) |
+| `RegionClosing` | 결과 영역                |
+| `Radius`        | 구조 요소의 반지름 (실수형)     |
+
+## 작동 방식 (형태학적 클로징)
+1. 팽창 (Dilation)
+
+2. 수축 (Erosion)
+
+둘 다 원형 구조 요소(disk-shaped structuring element) 를 사용하며, Radius에 따라 크기가 결정됩니다.
+
+
+### 수식
+
+closing(A) = erosion(dilation(A, B), B)
+
+A는 입력 바이너리 영역
+
+B는 반지름이 Radius인 원형 구조 요소
+
+## 효과
+1. 작은 구멍을 채움 (예: 노이즈나 결함)
+
+2. 가까운 객체들이 연결됨 (예: 점자 도트가 너무 가까이 있을 때 하나로 인식)
+---
+
+```python
+opening_circle (Regions, RegionOpening, Radius)
+```
+closing_circle과 쌍을 이루는 형태학적(morphological) 연산.
+두 연산 모두 객체의 형상(structure)을 조작하여 잡음을 제거하거나, 객체를 정리하는 데 사용
+
+| 파라미터            | 설명                   |
+| --------------- | -------------------- |
+| `Regions`       | 입력 이진 영역 (바이너리 객체)   |
+| `RegionOpening` | 결과로 생성될 영역           |
+| `Radius`        | 구조 요소의 반지름 (원형, 실수형) |
+
+## 작동 방식 (형태학적 클로징)
+1. 수축 (Erosion)
+
+2. 팽창 (Dilation)
+
+둘 다 원형 구조 요소(disk-shaped structuring element) 를 사용하며, Radius에 따라 크기가 결정됩니다.
+
+### 수식
+
+opening(A) = dilation(erosion(A, B), B)
+
+A는 입력 바이너리 영역
+
+B는 반지름이 Radius인 원형 구조 요소
+
+## 효과
+1. **작은 객체(노이즈)**를 제거
+
+2. 경계를 부드럽게 만듦
+
+3. 객체 간에 붙어 있던 것들을 분리할 수 있음 (반지름에 따라)
 
 ---
+✅ closing_circle vs opening_circle
+
+| 항목    | `closing_circle` | `opening_circle` |
+| ----- | ---------------- | ---------------- |
+| 연산 순서 | 팽창 → 수축          | 수축 → 팽창          |
+| 용도    | 끊긴 부분 연결, 구멍 메우기 | 잡음 제거, 객체 분리     |
+| 효과    | 객체 크기 약간 커짐      | 객체 크기 약간 작아짐     |
+| 사용 목적 | 연결 및 내부 결함 보정    | 정제 및 노이즈 제거      |
+
+---
+
+```python
+smallest_circle (Regions, Row, Column, Radius)
+```
+ 바이너리 영역(Region) 각각에 대해 그 영역을 완전히 포함하는 
+ 가장 작은 원(minimum enclosing circle)을 계산해주는 연산
+
+ | 파라미터      | 설명                                 |
+| --------- | ---------------------------------- |
+| `Regions` | 입력 바이너리 영역(HObject), 일반적으로 연결된 객체들 |
+| `Row`     | 결과 원의 중심 Y 좌표 (행 좌표)               |
+| `Column`  | 결과 원의 중심 X 좌표 (열 좌표)               |
+| `Radius`  | 결과 원의 반지름                          |
+
+---
+
+```python
+gen_circle_contour_xld (Circle : Row, Column, Radius, StartPhi, EndPhi, PointOrder, Resolution)
+```
+원을 외곽선(컨투어) 형태로 생성하는 함수
+이는 점, 반지름, 방향 등 다양한 속성을 기반으로 시각화용 또는 분석용 원형 경계선을 생성할 수 있게 해줌.
+
+
+| 파라미터         | 설명                                        |
+| ------------ | ----------------------------------------- |
+| `Circle`     | 생성될 XLD 컨투어 객체 (출력)                       |
+| `Row`        | 원의 중심의 Y좌표 (행 좌표)                         |
+| `Column`     | 원의 중심의 X좌표 (열 좌표)                         |
+| `Radius`     | 원의 반지름                                    |
+| `StartPhi`   | 원호 시작 각도 (라디안)                            |
+| `EndPhi`     | 원호 종료 각도 (라디안)                            |
+| `PointOrder` | 'positive' (시계 반대 방향), 'negative' (시계 방향) |
+| `Resolution` | 곡선을 구성할 포인트 간 거리 (작을수록 더 매끄러운 원 생성)       |
+
+---
+
 ```python
 connection(Regions, ConnectedRegions)
 
